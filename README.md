@@ -1,1 +1,1 @@
-# java-microorm
+Project for testing of different "micro-orm" libraries for Java.
