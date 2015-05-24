@@ -9,6 +9,7 @@
         <module>jdbi</module>
         <module>jooq</module>
         <module>simpleflatmapper</module>
+        <module>microorm-testing</module>
     </modules>
     <packaging>pom</packaging>
 
