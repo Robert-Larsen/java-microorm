@@ -1,4 +1,4 @@
-package model;
+package no.bekk.java.microorm.model;
 
 import java.util.List;
 

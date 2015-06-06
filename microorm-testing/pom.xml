@@ -12,6 +12,11 @@
 	<artifactId>microorm-testing</artifactId>
 
 	<dependencies>
+		<dependency>
+			<groupId>no.bekk</groupId>
+			<artifactId>microorm-model</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 		<!--<dependency>-->
 			<!--<groupId>no.bekk</groupId>-->
 			<!--<artifactId>simpleflatmapper</artifactId>-->
@@ -52,6 +57,16 @@
 			<artifactId>jooq</artifactId>
 			<version>3.6.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>jooq-meta</artifactId>
+			<version>3.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>jooq-codegen</artifactId>
+			<version>3.6.1</version>
+		</dependency>
 
 		<!-- Simple flatmapper-->
 		<dependency>
@@ -60,6 +75,32 @@
 			<version>1.8.1</version>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.3.2</version>
+
+				<executions>
+					<execution>
+						<id>generate-jooq-model</id>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<phase>generate-sources</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>no.bekk.java.microorm.generator.GeneratorMain</mainClass>
+					<arguments>
+						<argument>${project.build.outputDirectory}</argument>
+					</arguments>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 
 </project>

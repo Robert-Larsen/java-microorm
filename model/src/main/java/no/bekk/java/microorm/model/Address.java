@@ -1,4 +1,4 @@
-package model;
+package no.bekk.java.microorm.model;
 
 public class Address {
 

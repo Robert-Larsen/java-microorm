@@ -1,4 +1,7 @@
-import model.Person;
+package no.bekk.java.microorm;
+
+import no.bekk.java.microorm.model.Person;
+import no.bekk.java.microorm.model.Testdata;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
