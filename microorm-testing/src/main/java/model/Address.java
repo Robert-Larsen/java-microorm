@@ -18,4 +18,12 @@ public class Address {
 	public long getId() {
 		return id;
 	}
+
+	public String getStreet() {
+		return street;
+	}
+
+	public String getZipcode() {
+		return zipcode;
+	}
 }

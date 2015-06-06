@@ -22,6 +22,14 @@ public class Person {
 		return id;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public List<Address> getAddresses() {
+		return addresses;
+	}
+
 	public void print() {
 		System.out.println(id + ": " + name);
 		for (Address a : addresses) {
