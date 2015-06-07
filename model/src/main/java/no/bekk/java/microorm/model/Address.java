@@ -26,4 +26,9 @@ public class Address {
 	public String getZipcode() {
 		return zipcode;
 	}
+
+	@Override
+	public String toString() {
+		return "Address:" + id + ":" + street + ":" + zipcode;
+	}
 }

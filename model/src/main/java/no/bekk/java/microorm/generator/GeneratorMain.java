@@ -28,7 +28,7 @@ public class GeneratorMain {
 										.withName("org.jooq.util.hsqldb.HSQLDBDatabase")
 										.withIncludes(".*")
 										.withExcludes("")
-//								.withInputSchema("public")
+								.withInputSchema("PUBLIC")
 						)
 						.withTarget(new Target()
 								.withPackageName("no.bekk.java.microorm.jooq.generated")

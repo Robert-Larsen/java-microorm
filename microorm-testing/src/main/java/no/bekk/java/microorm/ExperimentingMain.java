@@ -28,6 +28,8 @@ public class ExperimentingMain {
 		// spring jdbctemplate
 //		PersonDao.listPersonsWithAddresses(jdbcTemplate).forEach(Person::print);
 		// simple flatmapper
-		PersonDao.listPersonsWithAddressesSimpleflatmapper(jdbcTemplate).forEach(Person::print);
+//		PersonDao.listPersonsWithAddressesSimpleflatmapper(jdbcTemplate).forEach(Person::print);
+		// JOOQ
+		PersonDao.listPersonsWithAddressesJooqStatic(jdbcTemplate).forEach(Person::print);
 	}
 }

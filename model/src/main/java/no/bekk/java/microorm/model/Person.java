@@ -36,4 +36,9 @@ public class Person {
 			System.out.println("\t" + a.getId() + ": " + a.street + ", " + a.zipcode);
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "Person:" + id + ":" + name + ":"+addresses.toString();
+	}
 }

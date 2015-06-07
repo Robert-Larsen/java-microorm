@@ -1,12 +1,17 @@
 package no.bekk.java.microorm;
 
+import no.bekk.java.microorm.jooq.generated.tables.records.AddressRecord;
+import no.bekk.java.microorm.jooq.generated.tables.records.PersonRecord;
 import no.bekk.java.microorm.model.Address;
 import no.bekk.java.microorm.model.Person;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.sfm.jdbc.JdbcMapper;
 import org.sfm.jdbc.JdbcMapperFactory;
+import org.sfm.jooq.SfmRecordMapperProvider;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.Connection;
@@ -15,8 +20,10 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.jooq.impl.DSL.field;
-import static org.jooq.impl.DSL.table;
+import static java.util.stream.Collectors.toList;
+import static no.bekk.java.microorm.jooq.generated.tables.Address.ADDRESS;
+import static no.bekk.java.microorm.jooq.generated.tables.Person.PERSON;
+import static no.bekk.java.microorm.jooq.generated.tables.PersonAddress.PERSON_ADDRESS;
 
 public class PersonDao {
 
@@ -53,7 +60,7 @@ public class PersonDao {
 					}
 				});
 
-		return persons.values().stream().collect(Collectors.toList());
+		return persons.values().stream().collect(toList());
 	}
 
 	public static List<Person> listPersonsWithAddressesSimpleflatmapper(JdbcTemplate jdbcTemplate) {
@@ -80,7 +87,7 @@ public class PersonDao {
 						"left join person_address pa on pa.person_id = p.id\n" +
 						"join address a on pa.address_id = a.id;",
 				(ResultSet resultSet) -> {
-					return mapper.stream(resultSet).collect(Collectors.toList());
+					return mapper.stream(resultSet).collect(toList());
 				});
 	}
 
@@ -88,15 +95,46 @@ public class PersonDao {
 		return jdbcTemplate.execute((Connection connection) -> {
 
 			DSLContext create = DSL.using(connection, SQLDialect.HSQLDB);
-//
-//			create.select()
-//					.from(table("PERSON"))
-//					.fetch()
-//					.map(rec -);
+			create.configuration().set(new SfmRecordMapperProvider());
 
-			return null;
+			Result<Record> r  =create
+					.select(PERSON.fields()).select(ADDRESS.fields())
+					.from(PERSON)
+					.leftOuterJoin(PERSON_ADDRESS)
+					.on(PERSON.ID.eq(PERSON_ADDRESS.PERSON_ID))
+					.join(ADDRESS)
+					.on(PERSON_ADDRESS.ADDRESS_ID.eq(ADDRESS.ID))
+					.fetch();
 
+			LinkedHashMap<PersonRecord, List<AddressRecord>> grouping = r.stream()
+					.map(pr -> new PersonAddressTuple(pr.into(PERSON), pr.into(ADDRESS)))
+					.collect(Collectors.groupingBy(t -> t.person, () -> new LinkedHashMap<>(), Collectors.mapping(t -> t.address, toList())))
+					;
+
+			List<Person> persons = grouping.entrySet().stream()
+					.map(e -> {
+						List<Address> addresses = e.getValue().stream().map(ar -> new Address(ar.getStreet(), ar.getZipcode())).collect(toList());
+						return new Person(e.getKey().getName(), addresses);
+					})
+					.collect(toList());
+
+			return persons;
 		});
+	}
+
+	public static class PersonAddressTuple {
+		public final PersonRecord person;
+		public final AddressRecord address;
+
+		public PersonAddressTuple(PersonRecord person, AddressRecord address) {
+			this.person = person;
+			this.address = address;
+		}
+
+		@Override
+		public String toString() {
+			return person.toString() + address.toString();
+		}
 	}
 
 	public static Optional<Long> getNullableLong(ResultSet rs, String rsName) throws SQLException {
