@@ -15,7 +15,8 @@ public class SFMAssignments extends MicroormAssignment {
 	@Test
 	public void list_persons_with_addresses() {
 		List<Person> persons = sfmPersonDao.listPersonsWithAddresses();
-		System.out.println(persons);
+		CheckAssignment.printPersons(persons);
+		CheckAssignment.checkListPersonsWithAddresses(persons);
 	}
 
 	@Before

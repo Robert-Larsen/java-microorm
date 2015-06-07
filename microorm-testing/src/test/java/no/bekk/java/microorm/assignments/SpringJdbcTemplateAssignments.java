@@ -15,7 +15,8 @@ public class SpringJdbcTemplateAssignments extends MicroormAssignment {
 	@Test
 	public void list_persons_with_addresses() {
 		List<Person> persons = jdbcTemplatePersonDao.listPersonsWithAddresses();
-		System.out.println(persons);
+		CheckAssignment.printPersons(persons);
+		CheckAssignment.checkListPersonsWithAddresses(persons);
 	}
 
 	@Before

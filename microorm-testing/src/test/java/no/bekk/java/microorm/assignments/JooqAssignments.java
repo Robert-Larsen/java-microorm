@@ -14,7 +14,8 @@ public class JooqAssignments extends MicroormAssignment {
 	@Test
 	public void list_persons_with_addresses() {
 		List<Person> persons = jooqPersonDao.listPersonsWithAddresses();
-		System.out.println(persons);
+		CheckAssignment.printPersons(persons);
+		CheckAssignment.checkListPersonsWithAddresses(persons);
 	}
 
 	@Before

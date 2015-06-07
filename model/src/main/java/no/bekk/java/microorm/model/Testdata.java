@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import javax.sql.DataSource;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 public class Testdata {
 
@@ -28,22 +30,30 @@ public class Testdata {
 		long p1 = createPerson("Arne");
 		long p2 = createPerson("Jan");
 		long p3 = createPerson("Ida");
+		long p4 = createPerson("Janne");
 
-		long a1 = createAddress("Osloveien 68", "0150");
-		long a2 = createAddress("Trondheimsgata 3", "3801");
+		long a1 = createAddress("Osloveien 68", "0001");
+		long a2 = createAddress("Sognafaret 402", "0605");
+		long a41 = createAddress("Elvebakk 6", "1630");
+		long a42 = createAddress("Vinkelveien 261", "0623");
 
 		assignAddress(p1, a1);
-		assignAddress(p3, a1);
 		assignAddress(p2, a2);
+		assignAddress(p3, a1);
+		assignAddress(p4, a41, a42);
 	}
 
-	private void assignAddress(long personId, long addressId) {
-		new SimpleJdbcInsert(ds)
-				.withTableName("person_address")
-				.execute(new MapSqlParameterSource()
-								.addValue("person_id", personId)
-								.addValue("address_id", addressId)
-				);
+	private void assignAddress(long personId, long ... addressIds) {
+		LongStream.of(addressIds).forEach(addresseId -> {
+
+			new SimpleJdbcInsert(ds)
+					.withTableName("person_address")
+					.execute(new MapSqlParameterSource()
+									.addValue("person_id", personId)
+									.addValue("address_id", addresseId)
+					);
+
+		});
 	}
 
 	private long createAddress(String street, String zipcode) {
