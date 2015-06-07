@@ -1,5 +1,6 @@
 package no.bekk.java.microorm.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Person {
@@ -10,7 +11,7 @@ public class Person {
 
 	public Person(String name, List<Address> addresses) {
 		this.name = name;
-		this.addresses = addresses;
+		this.addresses = addresses != null ? addresses : new ArrayList<>();
 	}
 
 	public void setId(long id) {

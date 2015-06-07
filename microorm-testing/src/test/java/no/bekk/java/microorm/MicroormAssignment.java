@@ -1,5 +1,12 @@
 package no.bekk.java.microorm;
 
+import no.bekk.java.microorm.dao.JooqPersonDao;
+import no.bekk.java.microorm.dao.PersonDao;
+import no.bekk.java.microorm.dao.SimpleFlatmapperPersonDao;
+import no.bekk.java.microorm.dao.SpringJdbcTemplatePersonDao;
+import no.bekk.java.microorm.dao.reference.ReferenceJooqPersonDao;
+import no.bekk.java.microorm.dao.reference.ReferenceSimpleFlatmapperPersonDao;
+import no.bekk.java.microorm.dao.reference.ReferenceSpringJdbcTemplatePersonDao;
 import no.bekk.java.microorm.model.Testdata;
 import org.junit.Before;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,8 +16,10 @@ import javax.sql.DataSource;
 
 public abstract class MicroormAssignment {
 
-	protected DataSource ds;
-	protected JdbcTemplate jdbcTemplate;
+	protected static DataSource ds;
+	protected static JdbcTemplate jdbcTemplate;
+//	protected static DaoProvider daoProvider = DaoProvider.ASSIGNMENT;
+	protected static DaoProvider daoProvider = DaoProvider.REFERENCE;
 
 	@Before
 	public void initDatabase() {
@@ -18,6 +27,51 @@ public abstract class MicroormAssignment {
 			ds = new DriverManagerDataSource("jdbc:hsqldb:mem:test", "sa", "");
 			Testdata.setup(ds);
 			jdbcTemplate = new JdbcTemplate(ds);
+		}
+	}
+
+	public interface DaoProvider {
+		PersonDao getJooqPersonDao(JdbcTemplate jdbcTemplate);
+		PersonDao getSpringJdbcTemplatePersonDao(JdbcTemplate jdbcTemplate);
+		PersonDao getSFMPersonDao(JdbcTemplate jdbcTemplate);
+
+		DaoProvider REFERENCE = new ReferenceDaoProvider();
+		DaoProvider ASSIGNMENT = new AssignmentDaoProvider();
+	}
+
+	public static class ReferenceDaoProvider implements DaoProvider {
+
+		@Override
+		public PersonDao getJooqPersonDao(JdbcTemplate jdbcTemplate) {
+			return new ReferenceJooqPersonDao(jdbcTemplate);
+		}
+
+		@Override
+		public PersonDao getSpringJdbcTemplatePersonDao(JdbcTemplate jdbcTemplate) {
+			return new ReferenceSpringJdbcTemplatePersonDao(jdbcTemplate);
+		}
+
+		@Override
+		public PersonDao getSFMPersonDao(JdbcTemplate jdbcTemplate) {
+			return new ReferenceSimpleFlatmapperPersonDao(jdbcTemplate);
+		}
+	}
+
+	public static class AssignmentDaoProvider implements DaoProvider {
+
+		@Override
+		public PersonDao getJooqPersonDao(JdbcTemplate jdbcTemplate) {
+			return new JooqPersonDao(jdbcTemplate);
+		}
+
+		@Override
+		public PersonDao getSpringJdbcTemplatePersonDao(JdbcTemplate jdbcTemplate) {
+			return new SpringJdbcTemplatePersonDao(jdbcTemplate);
+		}
+
+		@Override
+		public PersonDao getSFMPersonDao(JdbcTemplate jdbcTemplate) {
+			return new SimpleFlatmapperPersonDao(jdbcTemplate);
 		}
 	}
 
