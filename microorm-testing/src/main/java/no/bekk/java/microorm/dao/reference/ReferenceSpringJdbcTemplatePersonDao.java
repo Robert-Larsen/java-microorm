@@ -4,6 +4,8 @@ import no.bekk.java.microorm.dao.PersonDao;
 import no.bekk.java.microorm.model.Address;
 import no.bekk.java.microorm.model.Person;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -54,6 +56,16 @@ public class ReferenceSpringJdbcTemplatePersonDao implements PersonDao {
 				});
 
 		return persons.values().stream().collect(toList());
+	}
+
+	@Override
+	public long create(Person person) {
+		Number primaryKey = new SimpleJdbcInsert(jdbcTemplate)
+				.withTableName("PERSON")
+				.usingGeneratedKeyColumns("id")
+				.executeAndReturnKey(new MapSqlParameterSource()
+						.addValue("name", person.getName()));
+		return primaryKey.longValue();
 	}
 
 	public static Optional<Long> getNullableLong(ResultSet rs, String rsName) throws SQLException {

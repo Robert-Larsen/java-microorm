@@ -1,5 +1,6 @@
 package no.bekk.java.microorm.dao.reference;
 
+import no.bekk.java.microorm.dao.AssignmentNotRelevant;
 import no.bekk.java.microorm.dao.PersonDao;
 import no.bekk.java.microorm.model.Person;
 import org.sfm.jdbc.JdbcMapper;
@@ -45,5 +46,10 @@ public class ReferenceSimpleFlatmapperPersonDao implements PersonDao {
 				(ResultSet resultSet) -> {
 					return mapper.stream(resultSet).collect(toList());
 				});
+	}
+
+	@Override
+	public long create(Person person) {
+		throw new AssignmentNotRelevant();
 	}
 }

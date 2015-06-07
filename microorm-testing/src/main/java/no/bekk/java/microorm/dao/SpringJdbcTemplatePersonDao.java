@@ -2,12 +2,11 @@ package no.bekk.java.microorm.dao;
 
 import no.bekk.java.microorm.model.Person;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class SpringJdbcTemplatePersonDao implements PersonDao {
 
@@ -34,13 +33,12 @@ public class SpringJdbcTemplatePersonDao implements PersonDao {
 		return persons;
 	}
 
-	public static Optional<Long> getNullableLong(ResultSet rs, String rsName) throws SQLException {
-		long value = rs.getLong(rsName);
-		if (rs.wasNull()) {
-			return Optional.empty();
-		} else {
-			return Optional.of(value);
-		}
+	@Override
+	public long create(Person person) {
+		new SimpleJdbcInsert(jdbcTemplate)
+				.withTableName("PERSON");
+
+		return -1;
 	}
 
 }

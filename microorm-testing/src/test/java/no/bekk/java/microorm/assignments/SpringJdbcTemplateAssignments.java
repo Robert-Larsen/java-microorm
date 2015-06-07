@@ -19,6 +19,13 @@ public class SpringJdbcTemplateAssignments extends MicroormAssignment {
 		CheckAssignment.checkListPersonsWithAddresses(persons);
 	}
 
+	@Test
+	public void create() {
+		Person personToInsert = new Person("Ola", null);
+		long id = jdbcTemplatePersonDao.create(personToInsert);
+		CheckAssignment.checkCreatePerson(jdbcTemplate, personToInsert, id);
+	}
+
 	@Before
 	public void setUp() {
 		jdbcTemplatePersonDao = daoProvider.getSpringJdbcTemplatePersonDao(jdbcTemplate);

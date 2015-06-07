@@ -10,7 +10,6 @@ import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
-import org.sfm.jooq.SfmRecordMapperProvider;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.Connection;
@@ -60,6 +59,18 @@ public class ReferenceJooqPersonDao implements PersonDao {
 		});
 	}
 
+	@Override
+	public long create(Person person) {
+		return jdbcTemplate.execute((Connection connection) -> {
+
+			DSLContext create = DSL.using(connection, SQLDialect.HSQLDB);
+
+			PersonRecord record = create.newRecord(PERSON);
+			record.setName(person.getName());
+			record.store();
+			return record.getId();
+		});
+	}
 
 	public static class PersonAddressTuple {
 		public final PersonRecord person;

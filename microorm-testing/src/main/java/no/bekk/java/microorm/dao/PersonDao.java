@@ -7,4 +7,6 @@ import java.util.List;
 public interface PersonDao {
 
 	List<Person> listPersonsWithAddresses();
+
+	long create(Person person);
 }

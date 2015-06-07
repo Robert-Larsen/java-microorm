@@ -18,6 +18,13 @@ public class JooqAssignments extends MicroormAssignment {
 		CheckAssignment.checkListPersonsWithAddresses(persons);
 	}
 
+	@Test
+	public void create() {
+		Person personToInsert = new Person("Ola", null);
+		long id = jooqPersonDao.create(personToInsert);
+		CheckAssignment.checkCreatePerson(jdbcTemplate, personToInsert, id);
+	}
+
 	@Before
 	public void setUp() {
 		jooqPersonDao = daoProvider.getJooqPersonDao(jdbcTemplate);

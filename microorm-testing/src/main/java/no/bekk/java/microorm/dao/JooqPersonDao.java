@@ -37,6 +37,17 @@ public class JooqPersonDao implements PersonDao {
 		});
 	}
 
+	@Override
+	public long create(Person person) {
+		return jdbcTemplate.execute((Connection connection) -> {
+
+			DSLContext create = DSL.using(connection, SQLDialect.HSQLDB);
+			// hint: new record
+
+			return -1;
+		});
+	}
+
 
 	public static class PersonAddressTuple {
 		public final PersonRecord person;

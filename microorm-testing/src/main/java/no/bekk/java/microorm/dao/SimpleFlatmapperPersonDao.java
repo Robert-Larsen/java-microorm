@@ -33,4 +33,9 @@ public class SimpleFlatmapperPersonDao implements PersonDao {
 				});
 	}
 
+	@Override
+	public long create(Person person) {
+		throw new AssignmentNotRelevant();
+	}
+
 }
