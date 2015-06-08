@@ -1,9 +1,7 @@
 package no.bekk.java.microorm;
 
-import no.bekk.java.microorm.dao.JooqPersonDao;
-import no.bekk.java.microorm.dao.PersonDao;
-import no.bekk.java.microorm.dao.SimpleFlatmapperPersonDao;
-import no.bekk.java.microorm.dao.SpringJdbcTemplatePersonDao;
+import no.bekk.java.microorm.dao.*;
+import no.bekk.java.microorm.dao.reference.ReferenceJdbiPersonDao;
 import no.bekk.java.microorm.dao.reference.ReferenceJooqPersonDao;
 import no.bekk.java.microorm.dao.reference.ReferenceSimpleFlatmapperPersonDao;
 import no.bekk.java.microorm.dao.reference.ReferenceSpringJdbcTemplatePersonDao;
@@ -34,6 +32,7 @@ public abstract class MicroormAssignment {
 		PersonDao getJooqPersonDao(JdbcTemplate jdbcTemplate);
 		PersonDao getSpringJdbcTemplatePersonDao(JdbcTemplate jdbcTemplate);
 		PersonDao getSFMPersonDao(JdbcTemplate jdbcTemplate);
+		PersonDao getJdbiPersonDao(JdbcTemplate jdbcTemplate);
 
 		DaoProvider REFERENCE = new ReferenceDaoProvider();
 		DaoProvider ASSIGNMENT = new AssignmentDaoProvider();
@@ -55,6 +54,11 @@ public abstract class MicroormAssignment {
 		public PersonDao getSFMPersonDao(JdbcTemplate jdbcTemplate) {
 			return new ReferenceSimpleFlatmapperPersonDao(jdbcTemplate);
 		}
+
+		@Override
+		public PersonDao getJdbiPersonDao(JdbcTemplate jdbcTemplate) {
+			return new ReferenceJdbiPersonDao(jdbcTemplate);
+		}
 	}
 
 	public static class AssignmentDaoProvider implements DaoProvider {
@@ -72,6 +76,11 @@ public abstract class MicroormAssignment {
 		@Override
 		public PersonDao getSFMPersonDao(JdbcTemplate jdbcTemplate) {
 			return new SimpleFlatmapperPersonDao(jdbcTemplate);
+		}
+
+		@Override
+		public PersonDao getJdbiPersonDao(JdbcTemplate jdbcTemplate) {
+			return new JdbiPersonDao(jdbcTemplate);
 		}
 	}
 
