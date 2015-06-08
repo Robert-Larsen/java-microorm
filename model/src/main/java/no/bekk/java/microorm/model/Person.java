@@ -10,8 +10,8 @@ public class Person {
 
 	private long id;
 	public final String name;
-	public Gender gender;
-	public LocalDate birthdate;
+	public final Gender gender;
+	public final LocalDate birthdate;
 	public final List<Address> addresses;
 
 	public Person(String name, Gender gender, LocalDate birthdate, List<Address> addresses) {
@@ -24,13 +24,8 @@ public class Person {
 	public void setId(long id) {
 		this.id = id;
 	}
-
 	public long getId() {
 		return id;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	public List<Address> getAddresses() {

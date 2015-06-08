@@ -14,17 +14,8 @@ public class Address {
 	public void setId(long id) {
 		this.id = id;
 	}
-
 	public long getId() {
 		return id;
-	}
-
-	public String getStreet() {
-		return street;
-	}
-
-	public String getZipcode() {
-		return zipcode;
 	}
 
 	@Override
