@@ -5,6 +5,7 @@ import no.bekk.java.microorm.jooq.generated.tables.records.AddressRecord;
 import no.bekk.java.microorm.jooq.generated.tables.records.PersonRecord;
 import no.bekk.java.microorm.model.Address;
 import no.bekk.java.microorm.model.Person;
+import no.bekk.java.microorm.model.Person.Gender;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -51,7 +52,7 @@ public class ReferenceJooqPersonDao implements PersonDao {
 			List<Person> persons = grouping.entrySet().stream()
 					.map(e -> {
 						List<Address> addresses = e.getValue().stream().map(ar -> new Address(ar.getStreet(), ar.getZipcode())).collect(toList());
-						return new Person(e.getKey().getName(), addresses);
+						return new Person(e.getKey().getName(), Gender.valueOf(e.getKey().getGender()), addresses);
 					})
 					.collect(toList());
 
@@ -66,7 +67,8 @@ public class ReferenceJooqPersonDao implements PersonDao {
 			DSLContext create = DSL.using(connection, SQLDialect.HSQLDB);
 
 			PersonRecord record = create.newRecord(PERSON);
-			record.setName(person.getName());
+			record.setName(person.name);
+			record.setGender(person.gender.name());
 			record.store();
 			return record.getId();
 		});

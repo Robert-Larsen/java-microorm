@@ -39,7 +39,7 @@ public class ReferenceSimpleFlatmapperPersonDao implements PersonDao {
 //				.mapper();
 
 		return jdbcTemplate.query(
-				"select p.id, p.name, a.id addresses_id, a.street addresses_street, a.zipcode addresses_zipcode \n" +
+				"select p.id, p.name, p.gender, a.id addresses_id, a.street addresses_street, a.zipcode addresses_zipcode \n" +
 						"from person p\n" +
 						"left join person_address pa on pa.person_id = p.id\n" +
 						"join address a on pa.address_id = a.id;",

@@ -3,6 +3,7 @@ package no.bekk.java.microorm.dao;
 import no.bekk.java.microorm.jooq.generated.tables.records.AddressRecord;
 import no.bekk.java.microorm.jooq.generated.tables.records.PersonRecord;
 import no.bekk.java.microorm.model.Person;
+import no.bekk.java.microorm.model.Person.Gender;
 import org.jooq.DSLContext;
 import org.jooq.Result;
 import org.jooq.SQLDialect;
@@ -33,7 +34,7 @@ public class JooqPersonDao implements PersonDao {
 					.fetch()
 					.into(PERSON);
 
-			return personRecords.map(r -> new Person(r.getName(), null));
+			return personRecords.map(r -> new Person(r.getName(), Gender.valueOf(r.getGender()), null));
 		});
 	}
 

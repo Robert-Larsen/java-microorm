@@ -1,5 +1,6 @@
 package no.bekk.java.microorm.model;
 
+import no.bekk.java.microorm.model.Person.Gender;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -23,14 +24,14 @@ public class Testdata {
 	}
 
 	private void setup() {
-		jdbcTemplate.execute("create table person(id IDENTITY, name VARCHAR(255))");
-		jdbcTemplate.execute("create table address(id IDENTITY, street VARCHAR(255), zipcode VARCHAR(4))");
-		jdbcTemplate.execute("create table person_address(person_id INT, address_id INT)");
+		jdbcTemplate.execute("create table person(id IDENTITY, name VARCHAR(255) not null, gender VARCHAR(6) not null)");
+		jdbcTemplate.execute("create table address(id IDENTITY, street VARCHAR(255) not null, zipcode VARCHAR(4) not null)");
+		jdbcTemplate.execute("create table person_address(person_id INT not null, address_id INT not null)");
 
-		long p1 = createPerson("Arne");
-		long p2 = createPerson("Jan");
-		long p3 = createPerson("Ida");
-		long p4 = createPerson("Janne");
+		long p1 = createPerson("Arne", Gender.MALE);
+		long p2 = createPerson("Jan", Gender.MALE);
+		long p3 = createPerson("Ida", Gender.FEMALE);
+		long p4 = createPerson("Janne", Gender.MALE);
 
 		long a1 = createAddress("Osloveien 68", "0001");
 		long a2 = createAddress("Sognafaret 402", "0605");
@@ -67,12 +68,13 @@ public class Testdata {
 		return id.longValue();
 	}
 
-	private long createPerson(String name) {
+	private long createPerson(String name, Gender gender) {
 		Number id = new SimpleJdbcInsert(ds)
 				.withTableName("person")
 				.usingGeneratedKeyColumns("id")
 				.executeAndReturnKey(new MapSqlParameterSource()
 								.addValue("name", name)
+								.addValue("gender", gender.name())
 				);
 		return id.longValue();
 	}

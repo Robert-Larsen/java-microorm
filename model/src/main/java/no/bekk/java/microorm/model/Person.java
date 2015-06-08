@@ -5,19 +5,25 @@ import java.util.List;
 
 public class Person {
 
+	public enum Gender { MALE, FEMALE }
+
 	private long id;
 	public final String name;
+	public Gender gender;
+	//birthdate (localdate)
+	//gender (enum)
+	//
 	public final List<Address> addresses;
 
-	public Person(String name, List<Address> addresses) {
+	public Person(String name, Gender gender, List<Address> addresses) {
 		this.name = name;
+		this.gender = gender;
 		this.addresses = addresses != null ? addresses : new ArrayList<>();
 	}
 
 	public void setId(long id) {
 		this.id = id;
 	}
-
 
 	public long getId() {
 		return id;
@@ -29,13 +35,6 @@ public class Person {
 
 	public List<Address> getAddresses() {
 		return addresses;
-	}
-
-	public void print() {
-		System.out.println(id + ": " + name);
-		for (Address a : addresses) {
-			System.out.println("\t" + a.getId() + ": " + a.street + ", " + a.zipcode);
-		}
 	}
 
 	@Override
