@@ -1,10 +1,11 @@
 package no.bekk.java.microorm.dao;
 
 import no.bekk.java.microorm.model.Person;
+import no.bekk.java.microorm.model.Person.Gender;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class SpringJdbcTemplatePersonDao implements PersonDao {
 				rs -> {
 
 					long personId = rs.getLong("id");
-					Person p = new Person(rs.getString("name"), null);
+					Person p = new Person(rs.getString("name"), Gender.valueOf(rs.getString("gender")), LocalDate.ofEpochDay(rs.getDate("birthdate").getTime()), null);
 					p.setId(personId);
 					persons.add(p);
 				});

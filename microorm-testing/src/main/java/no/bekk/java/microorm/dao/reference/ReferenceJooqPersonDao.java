@@ -5,6 +5,7 @@ import no.bekk.java.microorm.jooq.generated.tables.records.AddressRecord;
 import no.bekk.java.microorm.jooq.generated.tables.records.PersonRecord;
 import no.bekk.java.microorm.model.Address;
 import no.bekk.java.microorm.model.Person;
+import no.bekk.java.microorm.model.Person.Gender;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -13,6 +14,7 @@ import org.jooq.impl.DSL;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.Connection;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,7 +53,8 @@ public class ReferenceJooqPersonDao implements PersonDao {
 			List<Person> persons = grouping.entrySet().stream()
 					.map(e -> {
 						List<Address> addresses = e.getValue().stream().map(ar -> new Address(ar.getStreet(), ar.getZipcode())).collect(toList());
-						return new Person(e.getKey().getName(), addresses);
+						PersonRecord pr = e.getKey();
+						return new Person(pr.getName(), Gender.valueOf(pr.getGender()), LocalDate.ofEpochDay(pr.getBirthdate().getTime()), addresses);
 					})
 					.collect(toList());
 
@@ -66,7 +69,9 @@ public class ReferenceJooqPersonDao implements PersonDao {
 			DSLContext create = DSL.using(connection, SQLDialect.HSQLDB);
 
 			PersonRecord record = create.newRecord(PERSON);
-			record.setName(person.getName());
+			record.setName(person.name);
+			record.setGender(person.gender.name());
+			record.setBirthdate(new java.sql.Date(person.birthdate.toEpochDay()));
 			record.store();
 			return record.getId();
 		});
