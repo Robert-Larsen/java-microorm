@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,16 +45,18 @@ public class CheckAssignment {
 		assertThat("Expected person with name " + name + " to have " + numberOfAddresses + " addresses, had " + person.get().addresses.size(),
 				person.get().addresses, hasSize(numberOfAddresses));
 		assertThat("Expected correct gender", person.get().gender, is(gender));
+		assertThat("Expected not null birthdate", person.get().birthdate, notNullValue());
 	}
 
 	public static void checkCreatePerson(JdbcTemplate jdbcTemplate, Person personToInsert, long id) {
 		List<Person> results = jdbcTemplate.query("select * from person where id = ?",
 				(rs, rowNum) -> {
-					return new Person(rs.getString("name"), Gender.valueOf(rs.getString("gender")), null);
+					return new Person(rs.getString("name"), Gender.valueOf(rs.getString("gender")), LocalDate.ofEpochDay(rs.getDate("birthdate").getTime()), null);
 				},
 				id);
 		assertThat("Expected one person record to have been created with id " + id, results, hasSize(1));
 		assertThat("Expected person record to have name", results.get(0).name, is(personToInsert.name));
-		assertThat("Expected person record to have name", results.get(0).gender, is(personToInsert.gender));
+		assertThat("Expected person record to have gender", results.get(0).gender, is(personToInsert.gender));
+		assertThat("Expected person record to have birthdate", results.get(0).birthdate, is(personToInsert.birthdate));
 	}
 }

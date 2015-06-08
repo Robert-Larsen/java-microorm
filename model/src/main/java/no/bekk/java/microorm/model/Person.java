@@ -1,5 +1,6 @@
 package no.bekk.java.microorm.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,14 +11,13 @@ public class Person {
 	private long id;
 	public final String name;
 	public Gender gender;
-	//birthdate (localdate)
-	//gender (enum)
-	//
+	public LocalDate birthdate;
 	public final List<Address> addresses;
 
-	public Person(String name, Gender gender, List<Address> addresses) {
+	public Person(String name, Gender gender, LocalDate birthdate, List<Address> addresses) {
 		this.name = name;
 		this.gender = gender;
+		this.birthdate = birthdate;
 		this.addresses = addresses != null ? addresses : new ArrayList<>();
 	}
 

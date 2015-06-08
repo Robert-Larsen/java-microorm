@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
@@ -27,7 +28,7 @@ public class ReferenceSpringJdbcTemplatePersonDao implements PersonDao {
 
 		Map<Long, Person> persons = new LinkedHashMap<>();
 		jdbcTemplate.query(
-				"select p.id p_id, p.name p_name, p.gender p_gender, a.id a_id, a.street a_street, a.zipcode a_zipcode \n" +
+				"select p.id p_id, p.name p_name, p.gender p_gender, p.birthdate p_birthdate, a.id a_id, a.street a_street, a.zipcode a_zipcode \n" +
 						"from person p\n" +
 						"left join person_address pa on pa.person_id = p.id\n" +
 						"join address a on pa.address_id = a.id;", rs -> {
@@ -36,7 +37,11 @@ public class ReferenceSpringJdbcTemplatePersonDao implements PersonDao {
 					Optional<Long> addressId = getNullableLong(rs, "a_id");
 
 					if (!addressId.isPresent()) {
-						Person p = new Person(rs.getString("p_name"), Gender.valueOf(rs.getString("p_gender")), null);
+						Person p = new Person(
+								rs.getString("p_name"),
+								Gender.valueOf(rs.getString("p_gender")),
+								LocalDate.ofEpochDay(rs.getDate("p_birthdate").getTime()),
+								null);
 						p.setId(personId);
 						persons.put(personId, p);
 
@@ -49,7 +54,11 @@ public class ReferenceSpringJdbcTemplatePersonDao implements PersonDao {
 						} else {
 							List<Address> addresses = new ArrayList<>();
 							addresses.add(a);
-							Person p = new Person(rs.getString("p_name"), Gender.valueOf(rs.getString("p_gender")), addresses);
+							Person p = new Person(
+									rs.getString("p_name"),
+									Gender.valueOf(rs.getString("p_gender")),
+									LocalDate.ofEpochDay(rs.getDate("p_birthdate").getTime()),
+									addresses);
 							p.setId(personId);
 							persons.put(personId, p);
 						}
@@ -67,6 +76,7 @@ public class ReferenceSpringJdbcTemplatePersonDao implements PersonDao {
 				.executeAndReturnKey(new MapSqlParameterSource()
 						.addValue("name", person.name)
 						.addValue("gender", person.gender.name())
+						.addValue("birthdate", new java.sql.Date(person.birthdate.toEpochDay()))
 				);
 		return primaryKey.longValue();
 	}

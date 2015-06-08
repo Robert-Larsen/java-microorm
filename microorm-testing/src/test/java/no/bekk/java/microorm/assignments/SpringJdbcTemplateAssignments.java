@@ -7,6 +7,7 @@ import no.bekk.java.microorm.model.Person.Gender;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class SpringJdbcTemplateAssignments extends MicroormAssignment {
@@ -22,7 +23,7 @@ public class SpringJdbcTemplateAssignments extends MicroormAssignment {
 
 	@Test
 	public void create() {
-		Person personToInsert = new Person("Ola", Gender.MALE, null);
+		Person personToInsert = new Person("Ola", Gender.MALE, LocalDate.of(1990, 1, 1), null);
 		long id = jdbcTemplatePersonDao.create(personToInsert);
 		CheckAssignment.checkCreatePerson(jdbcTemplate, personToInsert, id);
 	}

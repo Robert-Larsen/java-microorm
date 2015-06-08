@@ -14,6 +14,7 @@ import org.jooq.impl.DSL;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.Connection;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,7 +53,8 @@ public class ReferenceJooqPersonDao implements PersonDao {
 			List<Person> persons = grouping.entrySet().stream()
 					.map(e -> {
 						List<Address> addresses = e.getValue().stream().map(ar -> new Address(ar.getStreet(), ar.getZipcode())).collect(toList());
-						return new Person(e.getKey().getName(), Gender.valueOf(e.getKey().getGender()), addresses);
+						PersonRecord pr = e.getKey();
+						return new Person(pr.getName(), Gender.valueOf(pr.getGender()), LocalDate.ofEpochDay(pr.getBirthdate().getTime()), addresses);
 					})
 					.collect(toList());
 
@@ -69,6 +71,7 @@ public class ReferenceJooqPersonDao implements PersonDao {
 			PersonRecord record = create.newRecord(PERSON);
 			record.setName(person.name);
 			record.setGender(person.gender.name());
+			record.setBirthdate(new java.sql.Date(person.birthdate.toEpochDay()));
 			record.store();
 			return record.getId();
 		});

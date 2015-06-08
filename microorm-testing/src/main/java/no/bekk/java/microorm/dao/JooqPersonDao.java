@@ -11,6 +11,7 @@ import org.jooq.impl.DSL;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.Connection;
+import java.time.LocalDate;
 import java.util.List;
 
 import static no.bekk.java.microorm.jooq.generated.tables.Person.PERSON;
@@ -34,7 +35,7 @@ public class JooqPersonDao implements PersonDao {
 					.fetch()
 					.into(PERSON);
 
-			return personRecords.map(r -> new Person(r.getName(), Gender.valueOf(r.getGender()), null));
+			return personRecords.map(r -> new Person(r.getName(), Gender.valueOf(r.getGender()), LocalDate.ofEpochDay(r.getBirthdate().getTime()), null));
 		});
 	}
 
