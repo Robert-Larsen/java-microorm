@@ -3,11 +3,7 @@ package no.bekk.java.microorm.assignments;
 import no.bekk.java.microorm.model.Person;
 import no.bekk.java.microorm.model.Person.Gender;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,7 +47,7 @@ public class CheckAssignment {
 	public static void checkCreatePerson(JdbcTemplate jdbcTemplate, Person personToInsert, long id) {
 		List<Person> results = jdbcTemplate.query("select * from person where id = ?",
 				(rs, rowNum) -> {
-					return new Person(rs.getString("name"), Gender.valueOf(rs.getString("gender")), LocalDate.ofEpochDay(rs.getDate("birthdate").getTime()), null);
+					return new Person(rs.getString("name"), Gender.valueOf(rs.getString("gender")), rs.getDate("birthdate").toLocalDate(), null);
 				},
 				id);
 		assertThat("Expected one person record to have been created with id " + id, results, hasSize(1));

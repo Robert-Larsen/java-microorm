@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
@@ -40,7 +39,7 @@ public class ReferenceSpringJdbcTemplatePersonDao implements PersonDao {
 						Person p = new Person(
 								rs.getString("p_name"),
 								Gender.valueOf(rs.getString("p_gender")),
-								LocalDate.ofEpochDay(rs.getDate("p_birthdate").getTime()),
+								rs.getDate("p_birthdate").toLocalDate(),
 								null);
 						p.setId(personId);
 						persons.put(personId, p);
@@ -57,7 +56,7 @@ public class ReferenceSpringJdbcTemplatePersonDao implements PersonDao {
 							Person p = new Person(
 									rs.getString("p_name"),
 									Gender.valueOf(rs.getString("p_gender")),
-									LocalDate.ofEpochDay(rs.getDate("p_birthdate").getTime()),
+									rs.getDate("p_birthdate").toLocalDate(),
 									addresses);
 							p.setId(personId);
 							persons.put(personId, p);
@@ -74,9 +73,9 @@ public class ReferenceSpringJdbcTemplatePersonDao implements PersonDao {
 				.withTableName("PERSON")
 				.usingGeneratedKeyColumns("id")
 				.executeAndReturnKey(new MapSqlParameterSource()
-						.addValue("name", person.name)
-						.addValue("gender", person.gender.name())
-						.addValue("birthdate", new java.sql.Date(person.birthdate.toEpochDay()))
+								.addValue("name", person.name)
+								.addValue("gender", person.gender.name())
+								.addValue("birthdate", java.sql.Date.valueOf(person.birthdate))
 				);
 		return primaryKey.longValue();
 	}

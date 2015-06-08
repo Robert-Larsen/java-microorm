@@ -10,26 +10,25 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.util.List;
 
-public class SpringJdbcTemplateAssignments extends MicroormAssignment {
-
-	private PersonDao jdbcTemplatePersonDao;
+public class JooqAssignmentsTest extends MicroormAssignment {
+	private PersonDao jooqPersonDao;
 
 	@Test
 	public void list_persons_with_addresses() {
-		List<Person> persons = jdbcTemplatePersonDao.listPersonsWithAddresses();
+		List<Person> persons = jooqPersonDao.listPersonsWithAddresses();
 		CheckAssignment.printPersons(persons);
 		CheckAssignment.checkListPersonsWithAddresses(persons);
 	}
 
 	@Test
 	public void create() {
-		Person personToInsert = new Person("Ola", Gender.MALE, LocalDate.of(1990, 1, 1), null);
-		long id = jdbcTemplatePersonDao.create(personToInsert);
+		Person personToInsert = new Person("Ola", Gender.MALE, LocalDate.of(1990, 1, 1),  null);
+		long id = jooqPersonDao.create(personToInsert);
 		CheckAssignment.checkCreatePerson(jdbcTemplate, personToInsert, id);
 	}
 
 	@Before
 	public void setUp() {
-		jdbcTemplatePersonDao = daoProvider.getSpringJdbcTemplatePersonDao(jdbcTemplate);
+		jooqPersonDao = daoProvider.getJooqPersonDao(jdbcTemplate);
 	}
 }
