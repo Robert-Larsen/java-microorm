@@ -2,7 +2,6 @@ package no.bekk.java.microorm.dao;
 
 import no.bekk.java.microorm.model.Person;
 import org.springframework.jdbc.core.JdbcTemplate;
-
 import java.util.*;
 
 public class JdbiPersonDao implements PersonDao {
