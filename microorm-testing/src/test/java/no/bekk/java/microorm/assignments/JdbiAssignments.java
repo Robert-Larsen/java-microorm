@@ -2,12 +2,12 @@ package no.bekk.java.microorm.assignments;
 
 import no.bekk.java.microorm.MicroormAssignment;
 import no.bekk.java.microorm.dao.PersonDao;
-import no.bekk.java.microorm.dao.reference.ReferenceJdbiPersonDao;
 import no.bekk.java.microorm.model.Person;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class JdbiAssignments extends MicroormAssignment {
 
@@ -15,7 +15,9 @@ public class JdbiAssignments extends MicroormAssignment {
 
     @Test
     public void list_persons_with_addresses() {
-
+        List<Person> persons = jdbiPersonDao.listPersonsWithAddresses();
+        CheckAssignment.printPersons(persons);
+        CheckAssignment.checkListPersonsWithAddresses(persons);
     }
 
     @Test
