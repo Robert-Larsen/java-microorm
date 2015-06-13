@@ -7,16 +7,16 @@ import no.bekk.java.microorm.jooq.generated.tables.records.PersonRecord;
 import no.bekk.java.microorm.model.Address;
 import no.bekk.java.microorm.model.Person;
 import no.bekk.java.microorm.model.Person.Gender;
-import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.Result;
-import org.jooq.SQLDialect;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.Connection;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -52,14 +52,21 @@ public class ReferenceJooqPersonDao implements PersonDao {
 
 			List<Person> persons = grouping.entrySet().stream()
 					.map(e -> {
-						List<Address> addresses = e.getValue().stream().map(ar -> new Address(ar.getStreet(), ar.getZipcode())).collect(toList());
-						PersonRecord pr = e.getKey();
-						return new Person(pr.getName(), Gender.valueOf(pr.getGender()), pr.getBirthdate().toLocalDate(), addresses);
+						List<Address> addresses = e.getValue().stream().map(ReferenceJooqPersonDao::recordToAddress).collect(toList());
+						return recordToPerson(addresses).apply(e.getKey());
 					})
 					.collect(toList());
 
 			return persons;
 		});
+	}
+
+	private static Function<PersonRecord, Person> recordToPerson(List<Address> addresses) {
+		return pr -> new Person(pr.getName(), Gender.valueOf(pr.getGender()), pr.getBirthdate().toLocalDate(), addresses);
+	}
+
+	private static Address recordToAddress(AddressRecord ar) {
+		return new Address(ar.getStreet(), ar.getZipcode());
 	}
 
 	@Override
@@ -78,8 +85,25 @@ public class ReferenceJooqPersonDao implements PersonDao {
 	}
 
 	@Override
-	public List<Person> findPersons(FindPersonConstraints query) {
-		throw new UnsupportedOperationException("not implemented");
+	public List<Person> findPersons(FindPersonConstraints constraints) {
+		return jdbcTemplate.execute((Connection connection) -> {
+
+			DSLContext create = DSL.using(connection, SQLDialect.HSQLDB);
+
+			SelectJoinStep<Record> baseQuery = create.select(PERSON.fields()).from(PERSON);
+
+				List<Condition> conditions = new ArrayList<>();
+
+				constraints.name.ifPresent(n -> conditions.add(PERSON.NAME.like(n + "%")));
+				constraints.gender.ifPresent(g -> conditions.add(PERSON.GENDER.eq(g.name())));
+				constraints.birthdateBefore.ifPresent((bb -> conditions.add(PERSON.BIRTHDATE.lessThan(Date.valueOf(bb)))));
+
+				return baseQuery
+						.where(conditions)
+						.fetch()
+						.into(PERSON)
+						.map(pr -> recordToPerson(new ArrayList<>()).apply(pr));
+		});
 	}
 
 	public static class PersonAddressTuple {

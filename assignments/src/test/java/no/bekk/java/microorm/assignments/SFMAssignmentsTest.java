@@ -22,16 +22,6 @@ public class SFMAssignmentsTest extends MicroormAssignment {
 		CheckAssignment.checkListPersonsWithAddresses(persons);
 	}
 
-	@Test
-	public void test() {
-		LocalDate now = LocalDate.now();
-		Date sqlDate = Date.valueOf(now);
-		LocalDate localDateFromEpoch = sqlDate.toLocalDate();
-		System.out.println(now);
-		System.out.println(sqlDate);
-		System.out.println(sqlDate.toLocalDate());
-	}
-
 	@Before
 	public void setUp() {
 		sfmPersonDao = daoProvider.getSFMPersonDao(jdbcTemplate);

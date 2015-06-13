@@ -4,9 +4,7 @@ import no.bekk.java.microorm.jooq.generated.tables.records.AddressRecord;
 import no.bekk.java.microorm.jooq.generated.tables.records.PersonRecord;
 import no.bekk.java.microorm.model.Person;
 import no.bekk.java.microorm.model.Person.Gender;
-import org.jooq.DSLContext;
-import org.jooq.Result;
-import org.jooq.SQLDialect;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -52,7 +50,14 @@ public class JooqPersonDao implements PersonDao {
 
 	@Override
 	public List<Person> findPersons(FindPersonConstraints query) {
-		return Collections.EMPTY_LIST;
+		return jdbcTemplate.execute((Connection connection) -> {
+
+			DSLContext create = DSL.using(connection, SQLDialect.HSQLDB);
+
+			SelectJoinStep<Record> baseQuery = create.select(PERSON.fields()).from(PERSON);
+
+			return Collections.EMPTY_LIST;
+		});
 	}
 
 
