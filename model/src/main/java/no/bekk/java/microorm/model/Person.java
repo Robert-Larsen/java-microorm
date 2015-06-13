@@ -28,6 +28,7 @@ public class Person {
 		return id;
 	}
 
+	// used by SimpleFlatMapper
 	public List<Address> getAddresses() {
 		return addresses;
 	}

@@ -35,32 +35,18 @@ public class ReferenceSpringJdbcTemplatePersonDao implements PersonDao {
 					long personId = rs.getLong("p_id");
 					Optional<Long> addressId = getNullableLong(rs, "a_id");
 
-					if (!addressId.isPresent()) {
-						Person p = new Person(
-								rs.getString("p_name"),
-								Gender.valueOf(rs.getString("p_gender")),
-								rs.getDate("p_birthdate").toLocalDate(),
-								null);
-						p.setId(personId);
-						persons.put(personId, p);
+					Person p = new Person(
+							rs.getString("p_name"),
+							Gender.valueOf(rs.getString("p_gender")),
+							rs.getDate("p_birthdate").toLocalDate(),
+							new ArrayList<>());
+					p.setId(personId);
+					persons.putIfAbsent(personId, p);
 
-					} else {
+					if (addressId.isPresent()) {
 						Address a = new Address(rs.getString("street"), rs.getString("zipcode"));
 						a.setId(addressId.get());
-						if (persons.containsKey(personId)) {
-							Person p = persons.get(personId);
-							p.addresses.add(a);
-						} else {
-							List<Address> addresses = new ArrayList<>();
-							addresses.add(a);
-							Person p = new Person(
-									rs.getString("p_name"),
-									Gender.valueOf(rs.getString("p_gender")),
-									rs.getDate("p_birthdate").toLocalDate(),
-									addresses);
-							p.setId(personId);
-							persons.put(personId, p);
-						}
+						persons.get(personId).addresses.add(a);
 					}
 				});
 
