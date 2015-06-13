@@ -7,10 +7,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>model</module>
-        <module>jdbi</module>
-        <module>jooq</module>
-        <module>simpleflatmapper</module>
-        <module>microorm-testing</module>
+        <module>assignments</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -25,12 +22,66 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <!-- HSQLDB -->
+            <dependency>
+                <groupId>org.hsqldb</groupId>
+                <artifactId>hsqldb</artifactId>
+                <version>2.3.2</version>
+            </dependency>
+
+            <!-- SPRING JDBC -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>4.0.6.RELEASE</version>
+            </dependency>
+
+
+            <!-- JDBI-->
+            <dependency>
+                <groupId>org.jdbi</groupId>
+                <artifactId>jdbi</artifactId>
+                <version>2.62</version>
+            </dependency>
+
+            <!-- JOOQ -->
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq</artifactId>
+                <version>3.6.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-meta</artifactId>
+                <version>3.6.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen</artifactId>
+                <version>3.6.1</version>
+            </dependency>
+
+            <!-- Simple flatmapper-->
+            <dependency>
+                <groupId>org.simpleflatmapper</groupId>
+                <artifactId>simpleFlatMapper</artifactId>
+                <version>1.8.1</version>
+            </dependency>
+
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>1.3</version>
+                <scope>test</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 </project>
