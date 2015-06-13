@@ -6,6 +6,7 @@ import no.bekk.java.microorm.dao.reference.ReferenceJooqPersonDao;
 import no.bekk.java.microorm.dao.reference.ReferenceSimpleFlatmapperPersonDao;
 import no.bekk.java.microorm.dao.reference.ReferenceSpringJdbcTemplatePersonDao;
 import no.bekk.java.microorm.model.Testdata;
+import org.junit.After;
 import org.junit.Before;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -26,6 +27,11 @@ public abstract class MicroormAssignment {
 			Testdata.setup(ds);
 			jdbcTemplate = new JdbcTemplate(ds);
 		}
+	}
+
+	@After
+	public void resetDatabase() {
+		Testdata.reset(ds);
 	}
 
 	public interface DaoProvider {

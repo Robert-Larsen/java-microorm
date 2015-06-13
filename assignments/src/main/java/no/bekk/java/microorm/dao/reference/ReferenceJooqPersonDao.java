@@ -1,5 +1,6 @@
 package no.bekk.java.microorm.dao.reference;
 
+import no.bekk.java.microorm.dao.FindPersonConstraints;
 import no.bekk.java.microorm.dao.PersonDao;
 import no.bekk.java.microorm.jooq.generated.tables.records.AddressRecord;
 import no.bekk.java.microorm.jooq.generated.tables.records.PersonRecord;
@@ -74,6 +75,11 @@ public class ReferenceJooqPersonDao implements PersonDao {
 			record.store();
 			return record.getId();
 		});
+	}
+
+	@Override
+	public List<Person> findPersons(FindPersonConstraints query) {
+		throw new UnsupportedOperationException("not implemented");
 	}
 
 	public static class PersonAddressTuple {

@@ -11,6 +11,7 @@ import org.jooq.impl.DSL;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.Connection;
+import java.util.Collections;
 import java.util.List;
 
 import static no.bekk.java.microorm.jooq.generated.tables.Person.PERSON;
@@ -47,6 +48,11 @@ public class JooqPersonDao implements PersonDao {
 
 			return -1;
 		});
+	}
+
+	@Override
+	public List<Person> findPersons(FindPersonConstraints query) {
+		return Collections.EMPTY_LIST;
 	}
 
 

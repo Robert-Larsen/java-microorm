@@ -38,4 +38,9 @@ public class SimpleFlatmapperPersonDao implements PersonDao {
 		throw new AssignmentNotRelevant();
 	}
 
+	@Override
+	public List<Person> findPersons(FindPersonConstraints query) {
+		throw new AssignmentNotRelevant();
+	}
+
 }

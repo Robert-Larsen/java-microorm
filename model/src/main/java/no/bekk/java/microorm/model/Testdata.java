@@ -24,11 +24,21 @@ public class Testdata {
 		new Testdata(ds).setup();
 	}
 
-	private void setup() {
-		jdbcTemplate.execute("create table person(id IDENTITY, name VARCHAR(255) not null, gender VARCHAR(6) not null, birthdate DATE not null)");
-		jdbcTemplate.execute("create table address(id IDENTITY, street VARCHAR(255) not null, zipcode VARCHAR(4) not null)");
-		jdbcTemplate.execute("create table person_address(person_id INT not null, address_id INT not null)");
+	public static void reset(DataSource ds) {
+		new Testdata(ds).reset();
+	}
 
+	private void reset() {
+		dropData();
+		insertData();
+	}
+
+	private void setup() {
+		createSchema();
+		insertData();
+	}
+
+	private void insertData() {
 		long p1 = createPerson("Arne", Gender.MALE, LocalDate.of(1948, 5, 8));
 		long p2 = createPerson("Jan", Gender.MALE, LocalDate.of(1994, 1, 27));
 		long p3 = createPerson("Ida", Gender.FEMALE, LocalDate.of(2003, 12, 3));
@@ -43,6 +53,18 @@ public class Testdata {
 		assignAddress(p2, a2);
 		assignAddress(p3, a1);
 		assignAddress(p4, a41, a42);
+	}
+
+	private void createSchema() {
+		jdbcTemplate.execute("create table person(id IDENTITY, name VARCHAR(255) not null, gender VARCHAR(6) not null, birthdate DATE not null)");
+		jdbcTemplate.execute("create table address(id IDENTITY, street VARCHAR(255) not null, zipcode VARCHAR(4) not null)");
+		jdbcTemplate.execute("create table person_address(person_id INT not null, address_id INT not null)");
+	}
+
+	private void dropData() {
+		jdbcTemplate.execute("delete from person_address");
+		jdbcTemplate.execute("delete from address");
+		jdbcTemplate.execute("delete from person");
 	}
 
 	private void assignAddress(long personId, long... addressIds) {
@@ -76,7 +98,7 @@ public class Testdata {
 				.executeAndReturnKey(new MapSqlParameterSource()
 						.addValue("name", name)
 						.addValue("gender", gender.name())
-						.addValue("birthdate", new Date(birthdate.toEpochDay()))
+						.addValue("birthdate", Date.valueOf(birthdate))
 						);
 		return id.longValue();
 	}

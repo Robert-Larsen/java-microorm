@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SpringJdbcTemplatePersonDao implements PersonDao {
@@ -39,6 +40,11 @@ public class SpringJdbcTemplatePersonDao implements PersonDao {
 				.withTableName("PERSON");
 
 		return -1;
+	}
+
+	@Override
+	public List<Person> findPersons(FindPersonConstraints query) {
+		return Collections.EMPTY_LIST;
 	}
 
 }

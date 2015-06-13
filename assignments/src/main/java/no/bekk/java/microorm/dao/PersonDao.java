@@ -9,4 +9,6 @@ public interface PersonDao {
 	List<Person> listPersonsWithAddresses();
 
 	long create(Person person);
+
+	List<Person> findPersons(FindPersonConstraints query);
 }

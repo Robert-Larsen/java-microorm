@@ -1,13 +1,16 @@
 package no.bekk.java.microorm.assignments;
 
+import no.bekk.java.microorm.dao.PersonDao;
 import no.bekk.java.microorm.model.Person;
 import no.bekk.java.microorm.model.Person.Gender;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static no.bekk.java.microorm.dao.FindPersonConstraints.newConstraints;
 import static no.bekk.java.microorm.model.Person.Gender.FEMALE;
 import static no.bekk.java.microorm.model.Person.Gender.MALE;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -54,5 +57,27 @@ public class CheckAssignment {
 		assertThat("Expected person record to have name", results.get(0).name, is(personToInsert.name));
 		assertThat("Expected person record to have gender", results.get(0).gender, is(personToInsert.gender));
 		assertThat("Expected person record to have birthdate", results.get(0).birthdate, is(personToInsert.birthdate));
+	}
+
+	public static void checkDynamicQuery(PersonDao dao) {
+		assertThat(dao.findPersons(newConstraints()), hasSize(4));
+
+		assertThat(dao.findPersons(newConstraints().gender(MALE)), hasSize(3));
+
+		assertThat(dao.findPersons(
+						newConstraints()
+								.gender(MALE)
+								.nameStartingWith("Jan")
+				),
+				hasSize(2));
+
+		assertThat(dao.findPersons(
+						newConstraints()
+								.gender(MALE)
+								.nameStartingWith("Jan")
+								.birthdateBefore(LocalDate.of(1970, 1, 1))
+				),
+				hasSize(1));
+
 	}
 }

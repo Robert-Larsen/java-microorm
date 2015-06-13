@@ -21,4 +21,9 @@ public class JdbiPersonDao implements PersonDao {
     public long create(Person person) {
         return 1L;
     }
+
+    @Override
+    public List<Person> findPersons(FindPersonConstraints query) {
+        return Collections.EMPTY_LIST;
+    }
 }

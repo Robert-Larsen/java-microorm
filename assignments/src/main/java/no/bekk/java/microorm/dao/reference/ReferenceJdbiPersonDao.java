@@ -1,5 +1,6 @@
 package no.bekk.java.microorm.dao.reference;
 
+import no.bekk.java.microorm.dao.FindPersonConstraints;
 import no.bekk.java.microorm.dao.PersonDao;
 import no.bekk.java.microorm.model.Address;
 import no.bekk.java.microorm.model.Person;
@@ -50,6 +51,11 @@ public class ReferenceJdbiPersonDao implements PersonDao {
         DBI jdbi = new DBI(jdbcTemplate.getDataSource());
         JdbiDao jdbiDao = jdbi.onDemand(JdbiDao.class);
         return jdbiDao.insertPerson(person.name, person.gender, Date.valueOf(person.birthdate));
+    }
+
+    @Override
+    public List<Person> findPersons(FindPersonConstraints query) {
+        throw new UnsupportedOperationException("not implemented");
     }
 
     public static class PersonMapper implements ResultSetMapper<Person> {

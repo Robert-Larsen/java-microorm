@@ -27,6 +27,10 @@ public class JooqAssignmentsTest extends MicroormAssignment {
 		CheckAssignment.checkCreatePerson(jdbcTemplate, personToInsert, id);
 	}
 
+	public void dynamic_query() {
+		CheckAssignment.checkDynamicQuery(jooqPersonDao);
+	}
+
 	@Before
 	public void setUp() {
 		jooqPersonDao = daoProvider.getJooqPersonDao(jdbcTemplate);
