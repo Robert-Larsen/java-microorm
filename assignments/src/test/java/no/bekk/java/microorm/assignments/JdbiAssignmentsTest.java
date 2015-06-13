@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.util.List;
 
-public class JdbiAssignments extends MicroormAssignment {
+public class JdbiAssignmentsTest extends MicroormAssignment {
 
     PersonDao jdbiPersonDao;
 
