@@ -1,0 +1,83 @@
+presentationsinnhold
+--------------------
+intro
+- motreaktion mot ORM (Hibernate..)
+   - mindre kontroll
+   - "abstraherar bort" sql, men får ett annat query-språk istället
+   - påverkar i stor grad kod-strukturen (transaction-boundaries + entities => pain)
+   - lättare monolitisk kod
+   - lättare att slarva, allt kan ju lazy-loadas uansett!
+   - "it seems like a good idea at first, and by the time the problems become apparent, it's too late to switch away"
+
+alternativ? raw JDBC?
+   - microorm: convenience-lag för database-access utan auto-magi
+   - mest kända kanske Dapper (.NET) från stackoverflow-gänget
+
+
+vad är det förnuftigt att en micro-orm tar för sig?
+  typer av problem
+  - resurs-hantering      (connections, resultsets, statements)
+  - convenience querying  (parameter-binding, mapping-interfaces, ..)
+  - les-mapping           (query-resultat -> object)
+  - skriv-mapping         (object -> insert/update)
+
+vänta lite, är vi inte tillbaka i ORM-land igen?
+  - enkelhet
+  - tydliga gränser
+  - begränsning i hur komplexa problem som kan lösas utan hand-koding
+
+"microorms" i java-land?
+  - Spring JdbcTemplate
+  - JDBI
+  - JOOQ ("mini-ORM" pga kod-generering)
+  - SimpleFlatmapper
+  - SansORM  (från mannen bak HikariCP)
+  - OrmLite 
+  - Mentabean
+  - Jodd
+  - Anorm (Scala) https://www.playframework.com/documentation/2.0/ScalaAnorm
+  - roll your own..
+
+JOOQ
+  - "mini-ORM", gör det mesta, men med en database-first approach (till skillnad från ex. Hibernate)
+  - genererar kod utifrån database-schema
+    - "records"
+    - daos
+    - statisk Java-modell för databasen
+    - "jOOQ is a simple way to integrate the SQL language into Java in a way that allows for developers to write safe and quality SQL fast and directly in Java such that they can again focus on their business." - Lukas Eder
+  - koncept med "attached" records, men inte sessions-bundna som i Hibernate
+  - **kod-exempel från http://www.jooq.org/ alt http://www.jooq.org/doc/3.6/manual-single-page/#getting-started **
+
+
+SimpleFlatmapper
+  - kun les-mapping
+    ResultSet -> objekt-graf
+  - (egentligen en invers flatmapper?)
+  - typiskt för mapping av komplexare objekt-grafer från resultset, ex. 1:N relation i form av join
+  - "SFM is a library and does not force a framework on you it plugs on top of jdbc, jooq, java io, spring jdbc" - Arnau Droger
+  - stor grad convention-baserad
+  - **kod-exempel från https://github.com/arnaudroger/SimpleFlatMapper/wiki/SimpleFlatMapper-JdbcMapper-1-N-relationship **
+
+
+resurser
+  - Spring JdbcTemplate
+    http://docs.spring.io/spring/docs/current/spring-framework-reference/html/jdbc.html
+  
+  - JDBI
+    http://jdbi.org/
+
+  - JOOQ
+    http://www.jooq.org/
+    https://github.com/Manikandan-K/jdbi-folder
+
+  - SimpleFlatmapper
+    https://github.com/arnaudroger/SimpleFlatMapper
+    https://github.com/arnaudroger/SimpleFlatMapper/wiki/SimpleFlatMapper-JdbcMapper-1-N-relationship
+    https://github.com/arnaudroger/SimpleFlatMapper/wiki/Property-Mapping
+
+
+enkla övningar
+  - insert
+  - les-mapping m 1:N-relation
+  - dynamisk select
+
