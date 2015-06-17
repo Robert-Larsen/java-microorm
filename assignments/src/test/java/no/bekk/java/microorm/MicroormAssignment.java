@@ -17,8 +17,8 @@ public abstract class MicroormAssignment {
 
 	protected static DataSource ds;
 	protected static JdbcTemplate jdbcTemplate;
-//	protected static DaoProvider daoProvider = DaoProvider.ASSIGNMENT;
-	protected static DaoProvider daoProvider = DaoProvider.REFERENCE;
+	protected static DaoProvider daoProvider = DaoProvider.ASSIGNMENT;
+//	protected static DaoProvider daoProvider = DaoProvider.REFERENCE;
 
 	@Before
 	public void initDatabase() {
